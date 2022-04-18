@@ -19,7 +19,7 @@ data.sort_values(by='trade_date', ascending=True, inplace=True)
 
 data['SMA_10'] = data['price'].rolling(10).mean()
 data['SMA_60'] = data['price'].rolling(60).mean()
-data[['price','SMA_10','SMA_60']].plot(title='HS300 stock price | 10 & 60 days SMAs',
+data[['price','SMA_10','SMA_60']].plot(title='data stock price | 10 & 60 days SMAs',
                                        figsize=(10, 6))
 # add this and plot will show in pycharm
 # plt.show()
@@ -57,19 +57,19 @@ drawdown.max()
 
 
 # 优化：设置阈值，拒绝频繁信号
-hs300 = pro.daily(ts_code='hs300', start_date='20160630', end_date='20170630')
-hs300.rename(columns={'close': 'price'}, inplace=True)
-hs300.set_index('trade_date',inplace = True)
-hs300['SMA_10'] = hs300['price'].rolling(10).mean()
-hs300['SMA_60'] = hs300['price'].rolling(60).mean()
-hs300['10-60'] = hs300['SMA_10'] - hs300['SMA_60']
+data = pro.daily(ts_code='600030.SH', start_date='20160630', end_date='20170630')
+data.rename(columns={'close': 'price'}, inplace=True)
+data.set_index('trade_date',inplace = True)
+data['SMA_10'] = data['price'].rolling(10).mean()
+data['SMA_60'] = data['price'].rolling(60).mean()
+data['10-60'] = data['SMA_10'] - data['SMA_60']
 # 阈值
 SD = 20
-hs300['regime'] = np.where(hs300['10-60'] > SD, 1, 0)
-hs300['regime'] = np.where(hs300['10-60'] < -SD, -1, hs300['regime'])
-hs300['regime'].value_counts()
+data['regime'] = np.where(data['10-60'] > SD, 1, 0)
+data['regime'] = np.where(data['10-60'] < -SD, -1, data['regime'])
+data['regime'].value_counts()
 
-hs300['Market'] = np.log(hs300['price']/hs300['price'].shift(1))
-hs300['Strategy'] = hs300['regime'].shift(1) * hs300['Market']
-hs300[['Market','Strategy']].cumsum().apply(np.exp).plot(grid=True, figsize = (10,8))
+data['Market'] = np.log(data['price']/data['price'].shift(1))
+data['Strategy'] = data['regime'].shift(1) * data['Market']
+data[['Market','Strategy']].cumsum().apply(np.exp).plot(grid=True, figsize=(10, 8))
 
