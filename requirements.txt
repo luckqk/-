@@ -1,0 +1,6 @@
+-i https://pypi.tuna.tsinghua.edu.cn/simple
+numpy
+pandas
+tushare
+python-dotenv
+matplotlib
